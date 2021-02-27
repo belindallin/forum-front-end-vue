@@ -26,7 +26,7 @@
       <div class="ml-auto d-flex align-items-center">
         <!-- is user is admin -->
         <router-link
-             to="#" 
+             to="/admin/restaurants" 
              v-if="currentUser.isAdmin"
              class="text-white mr-3"
         >
@@ -41,12 +41,13 @@
             > 
             {{currentUser.name || '使用者'}} 您好
           </router-link>
-          <button
+          <router-link
+            to="/signin"
             type="button" 
             class="btn btn-sm btn-outline-success my-2 my-sm-0"
             >
             登出
-            </button>
+          </router-link>
           </template>          
       </div>
     </div>
@@ -88,7 +89,7 @@ export default {
         ...dummyUser.currentUser
       }
       this.isAuthenticated = dummyUser.isAuthenticated
-    }
+    },
   },
   created () {
     this.fetchUser()

@@ -2,16 +2,14 @@
   <div class="container py-5">
     <form class="w-100" @submit.prevent.stop="handleSubmit">
       <div class="text-center mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">
-          Sign Up
-        </h1>
+        <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
       </div>
 
       <div class="form-label-group mb-2">
         <label for="name">Name</label>
         <input
           id="name"
-          v-model= "name"
+          v-model="name"
           name="name"
           type="text"
           class="form-control"
@@ -19,14 +17,14 @@
           autocomplete="username"
           required
           autofocus
-        >
+        />
       </div>
 
       <div class="form-label-group mb-2">
         <label for="email">Email</label>
         <input
           id="email"
-          v-model= "email"
+          v-model="email"
           name="email"
           type="email"
           class="form-control"
@@ -34,81 +32,120 @@
           autocomplete="username"
           required
           autofocus
-        >
+        />
       </div>
 
       <div class="form-label-group mb-3">
         <label for="password">Password</label>
         <input
           id="password"
-          v-model= "password"
+          v-model="password"
           name="password"
           type="password"
           class="form-control"
           placeholder="Password"
           autocomplete="new-password"
           required
-        >
+        />
       </div>
 
       <div class="form-label-group mb-3">
         <label for="password-check">Password Check</label>
         <input
           id="password-check"
-          v-model= "passwordCheck"
+          v-model="passwordCheck"
           name="passwordCheck"
           type="password"
           class="form-control"
           placeholder="Password"
           autocomplete="new-password"
           required
-        >
-      </div>      
+        />
+      </div>
 
       <button
         class="btn btn-lg btn-primary btn-block mb-3"
         type="submit"
+        :disabled="isProcessing"
       >
         Submit
       </button>
 
       <div class="text-center mb-3">
         <p>
-          <router-link to="/signin">
-          Sign In
-          </router-link>
+          <router-link to="/signin"> Sign In </router-link>
         </p>
       </div>
 
-      <p class="mt-5 mb-3 text-muted text-center">
-        &copy; 2017-2018
-      </p>
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
     </form>
   </div>
 </template>
 
 <script>
+import authorizationAPI from "../apis/authorization.js";
+import { Toast } from "../utils/helper.js";
+
 export default {
+  name: "SignUp",
   data() {
     return {
-      name: '',
-      email: '',
-      password: '',
-      passwordCheck: ''
-
-    }
+      name: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+      isProcessing: false,
+    };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck
-      })
-      console.log('data', data)
-    }
-  }
-}
+    async handleSubmit() {
+      try {
+        if (!this.name) {
+          Toast.fire({
+            icon: "warning",
+            title: "請輸入name",
+          });
+          return;
+        } else if (!this.email) {
+          Toast.fire({
+            icon: "warning",
+            title: "請輸入email;",
+          });
+          return;
+        } else if (!this.password) {
+          Toast.fire({
+            icon: "warning",
+            title: "請輸入密碼",
+          });
+          return;
+        } else if (!this.passwordCheck) {
+          Toast.fire({
+            icon: "warning",
+            title: "請輸入確認密碼欄位",
+          });
+          return;
+        }
+        this.isProcessing = true;
+        const { data } = await authorizationAPI.signUp({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        });
+        if (data.status !== "success") {
+          throw new Error(data.error);
+        }
+        this.$router.push("/signin");
+      } catch (error) {
+        this.isProcessing = false;
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法註冊帳號，請稍後再試",
+        });
+      }
+    },
+  },
+};
 </script>
 

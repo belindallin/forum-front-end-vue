@@ -1,7 +1,7 @@
 <template>
   <div class="row no-gutters">
     <div class="col-md-4">
-        <img :src="profile.image" width="300px" height="300px">
+        <img :src="profile.image || emptyImage" width="300px" height="300px">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -18,13 +18,14 @@
         <p></p>
         
         <template>
-          <button
+          <router-link
             v-if="profile.id === currentUser.id"
             type="button"
             class="btn btn-primary"
+            :to="{name: 'user-edit', params: {id: profile.id}}"
           >
             Edit
-          </button>
+          </router-link>
           <template v-else>
             <button
               v-if="profile.isFollowed"
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import {emptyImageFilter} from '../utils/minixs.js'
 const dummyUser= {
   user: {
     id: 1,
@@ -61,6 +63,7 @@ const dummyUser= {
   isAuthenticated: true,
 }; 
 export default {
+  mixins: [emptyImageFilter],
   props: {
     initialProfile: {
       type: Object,
