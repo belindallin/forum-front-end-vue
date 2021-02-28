@@ -13,8 +13,8 @@
           Delete
         </button>
         <h3>
-          <router-link :to="{name:'user', params: {id: comment.User.id}}"> 
-            {{ comment.User.name }} 
+          <router-link :to="{ name: 'user', params: { id: comment.User.id } }">
+            {{ comment.User.name }}
           </router-link>
         </h3>
         <p>{{ comment.text }}</p>
@@ -28,16 +28,9 @@
 </template>
 
 <script>
-import { fromNowFilter } from "../utils/minixs";
-const dummyUser = {
-  user: {
-    id: 1,
-    name: "roo00t",
-    email: "root@example.com",
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+import { fromNowFilter } from "../utils/mixins";
+import { mapState } from "vuex";
+
 export default {
   mixins: [fromNowFilter],
   props: {
@@ -46,15 +39,13 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      currentUser: dummyUser.user,
-    };
-  },
   methods: {
     handleDeleteButtonClick(commentId) {
       this.$emit("after-delete-comment", commentId);
     },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
 };
 </script>

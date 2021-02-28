@@ -135,7 +135,7 @@ export default {
           name: this.newCategoryName,
         });
         if (data.status !== "success") {
-          throw new Error(data.error);
+          throw new Error(data.message);
         }
         this.categories.push({
           id: data.categoryId,
@@ -158,7 +158,7 @@ export default {
           categoryId,
         });
         if (data.status !== "success") {
-          throw new Error(data.error);
+          throw new Error(data.message);
         }
         this.categories = this.categories.filter(
           (category) => category.id !== categoryId
@@ -178,7 +178,7 @@ export default {
           name,
         });
         if (data.status !== "success") {
-          throw new Error(data.error);
+          throw new Error(data.message);
         }
         this.toggleIsEditing(categoryId);
       } catch (error) {

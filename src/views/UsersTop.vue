@@ -37,7 +37,7 @@
 
 <script>
 import NavTabs from "../components/NavTabs.vue";
-import { emptyImageFilter } from "../utils/minixs.js";
+import { emptyImageFilter } from "../utils/mixins.js";
 import usersAPI from "../apis/users.js";
 import { Toast } from "../utils/helper";
 
@@ -56,7 +56,7 @@ export default {
         followerCount: "",
         isFollowed: false,
       },
-    }
+    };
   },
   methods: {
     async fetchUsersTop() {
@@ -68,68 +68,68 @@ export default {
           image: user.image,
           followerCount: user.FollowerCount,
           isFollowed: user.isFollowed,
-        }))
+        }));
       } catch (error) {
-        console.log(error)
-        Toast.fire ({
+        console.log(error);
+        Toast.fire({
           icon: "error",
           title: "無法讀取美食達人，請稍後ˇ",
-        })
+        });
       }
     },
     async addFollowing(userId) {
       try {
-        const { data } = await usersAPI.addFollowing({ userId })
+        const { data } = await usersAPI.addFollowing({ userId });
         if (data.status !== "success") {
-          throw new Error(data.message)
+          throw new Error(data.message);
         }
         this.users = this.users.map((user) => {
           if (user.id !== userId) {
-            return user
+            return user;
           } else {
             return {
               ...user,
               followerCount: user.followerCount + 1,
               isFollowed: true,
-            }
+            };
           }
-        })
+        });
       } catch (error) {
         console.log(error),
           Toast.fire({
             icon: "error",
             title: "無法加入追蹤，請稍後",
-          })
+          });
       }
     },
     async cancelFollowing(userId) {
       try {
-        const {data} = await usersAPI.removeFollowing ({userId})
-        if (data.status !== 'success') {
-          throw new Error (data.message)
+        const { data } = await usersAPI.removeFollowing({ userId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
-        this.users = this.users.map(user => {
+        this.users = this.users.map((user) => {
           if (user.id !== userId) {
-            return user
+            return user;
           } else {
             return {
               ...user,
-              followerCount: user.followerCount -1,
-              isFollowed: false
-            }
+              followerCount: user.followerCount - 1,
+              isFollowed: false,
+            };
           }
-        })
-      } catch ( error) {
-        console.log (error)
-        Toast.fire ({
-          icon: 'error',
-          title: '無法取消追蹤，請稍後'
-        })
+        });
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤，請稍後",
+        });
       }
     },
   },
   created() {
     this.fetchUsersTop();
   },
-}
+};
 </script>

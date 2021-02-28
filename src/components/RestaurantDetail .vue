@@ -9,7 +9,7 @@
     <div class="col-lg-4">
       <img
         class="img-responsive center-block"
-        :src="restaurant.image || emptyImage"
+        :src="restaurant.image | emptyImage"
         style="width: 250px; margin-bottom: 25px"
       />
       <div class="contact-info-wrap">
@@ -40,7 +40,7 @@
 
       <button
         v-if="restaurant.isFavorited"
-        @click.prevent.stop="removeFavorite"
+        @click.prevent.stop="removeFavorite(restaurant.id)"
         type="button"
         class="btn btn-danger btn-border mr-2"
       >
@@ -48,7 +48,7 @@
       </button>
       <button
         v-else
-        @click.prevent.stop="addFavorite"
+        @click.prevent.stop="addFavorite(restaurant.id)"
         type="button"
         class="btn btn-primary btn-border mr-2"
       >
@@ -56,7 +56,7 @@
       </button>
       <button
         v-if="restaurant.isLiked"
-        @click.prevent.stop="removeLiked"
+        @click.prevent.stop="removeLiked(restaurant.id)"
         type="button"
         class="btn btn-danger like mr-2"
       >
@@ -64,7 +64,7 @@
       </button>
       <button
         v-else
-        @click.prevent.stop="addLiked"
+        @click.prevent.stop="addLiked(restaurant.id)"
         type="button"
         class="btn btn-primary like mr-2"
       >
@@ -75,7 +75,10 @@
 </template>
 
 <script>
-import { emptyImageFilter } from '../utils/minixs.js'
+import { emptyImageFilter } from "../utils/mixins.js";
+import usersAPI from "../apis/users";
+import { Toast } from "../utils/helper";
+
 export default {
   mixins: [emptyImageFilter],
   props: {
@@ -90,28 +93,83 @@ export default {
     };
   },
   methods: {
-    addFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: true,
-      };
+    async addFavorite(restaurantId) {
+      try {
+        const { data } = await usersAPI.addFavorite({ restaurantId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: true,
+        };
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "無法將該餐廳加入最愛，請稍後再試",
+        });
+      }
     },
-    removeFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: false,
-      };
+    async removeFavorite(restaurantId) {
+      try {
+        const { data } = await usersAPI.removeFavorite({ restaurantId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: false,
+        };
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法將該餐廳移除最愛，請稍後再試",
+        });
+      }
     },
-    addLiked() {
-      this.restaurant = {
-        ...this.restaurant,
-        isLiked: true,
-      };
+    async addLiked(restaurantId) {
+      try {
+        const { data } = await usersAPI.addLiked({ restaurantId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: true,
+        };
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法為該餐廳點讚，請稍後再試",
+        });
+      }
     },
-    removeLiked() {
+    async removeLiked(restaurantId) {
+      try {
+        const { data } = await usersAPI.removeLiked({ restaurantId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: false,
+        };
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法對該餐廳取消讚，請稍後再試",
+        });
+      }
+    },
+  },
+  watch: {
+    initialRestaurant(newValue) {
       this.restaurant = {
         ...this.restaurant,
-        isLiked: false,
+        ...newValue,
       };
     },
   },

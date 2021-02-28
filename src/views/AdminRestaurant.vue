@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-import { emptyImageFilter } from "../utils/minixs.js";
+import { emptyImageFilter } from "../utils/mixins.js";
 import adminAPI from "../apis/admin.js";
 import { Toast } from "../utils/helper";
 

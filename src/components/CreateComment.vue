@@ -1,5 +1,5 @@
 <template>
-  <form @click.prevent.stop="handleSubmit">
+  <form @submit.prevent.stop="handleSubmit">
     <div class="form-group mb-4">
       <label for="text">留下評論：</label>
       <textarea v-model="text" class="form-control" rows="3" name="text" />
@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
 export default {
   props: {
     restaurantId: {
@@ -30,7 +29,6 @@ export default {
   methods: {
     handleSubmit() {
       this.$emit("after-create-comment", {
-        commentId: uuidv4(),
         text: this.text,
         restaurantId: this.restaurantId,
       });

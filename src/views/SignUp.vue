@@ -133,7 +133,7 @@ export default {
           passwordCheck: this.passwordCheck,
         });
         if (data.status !== "success") {
-          throw new Error(data.error);
+          throw new Error(data.message);
         }
         this.$router.push("/signin");
       } catch (error) {

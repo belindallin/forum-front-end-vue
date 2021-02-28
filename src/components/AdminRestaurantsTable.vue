@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import adminAPI from '../apis/admin.js'
-import { Toast } from '../utils/helper.js';
+import adminAPI from "../apis/admin.js";
+import { Toast } from "../utils/helper.js";
 
 export default {
   data() {
@@ -61,30 +61,30 @@ export default {
   methods: {
     async fetchRestaurants() {
       try {
-        const {data} = await adminAPI.restaurants.get()
+        const { data } = await adminAPI.restaurants.get();
         this.restaurants = data.restaurants;
       } catch (error) {
-        Toast.fire ({
-          icon: 'error',
-          title: '無法取得餐廳資料，請稍後'
-        })
-      }      
+        Toast.fire({
+          icon: "error",
+          title: "無法取得餐廳資料，請稍後",
+        });
+      }
     },
     async deleteRestaurant(restaurantId) {
       try {
-        const {data} = await adminAPI.restaurants.delete ({restaurantId})
-        if (data.status !== 'success') {
-          throw new Error(data.error)
+        const { data } = await adminAPI.restaurants.delete({ restaurantId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
         this.restaurants = this.restaurants.filter(
-        (restaurant) => restaurant.id !== restaurantId
-        )
+          (restaurant) => restaurant.id !== restaurantId
+        );
       } catch (error) {
-        Toast.fire ({
-          icon: 'error',
-          title: '無法刪除餐廳資訊，請稍後'
-        })
-      }      
+        Toast.fire({
+          icon: "error",
+          title: "無法刪除餐廳資訊，請稍後",
+        });
+      }
     },
   },
 };

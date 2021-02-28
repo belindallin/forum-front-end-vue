@@ -3,7 +3,7 @@
     <div class="card mb-4">
       <img
         class="card-img-top"
-        :src="restaurant.image || emptyImage"
+        :src="restaurant.image | emptyImage"
         alt="Card image cap"
         width="286px"
         height="180px"
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/minixs.js";
+import { emptyImageFilter } from "../utils/mixins.js";
 import usersAPI from "../apis/users.js";
 import { Toast } from "../utils/helper.js";
 
